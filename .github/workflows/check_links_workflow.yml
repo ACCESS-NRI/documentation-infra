@@ -40,6 +40,8 @@ env:
 jobs:
   get-rtd-info:
     runs-on: ubuntu-latest
+    outputs:
+      canonical_url: ${{ steps.set-canonical-url.outputs.canonical_url }}
     steps:
       - name: Get RTD base URL and versioning scheme
         id: get-info
@@ -54,6 +56,28 @@ jobs:
           versioning_scheme=$(jq -r '.versioning_scheme' <<< "$rtd_project")
           echo "Versioning scheme: $versioning_scheme"
           echo "versioning_scheme=${versioning_scheme}" >> $GITHUB_OUTPUT
+    
+      - name: Set READTHEDOCS_CANONICAL_URL
+        id: set-canonical-url
+        env:
+          VERSIONING_SCHEME: ${{ steps.get-info.outputs.versioning_scheme }}
+          PR_NUM: ${{ github.event.pull_request.number }}
+        run: |
+          if [ "$VERSIONING_SCHEME" == 'single_version_without_translations' ]; then
+            version=
+            elif [ "$VERSIONING_SCHEME" == 'multiple_versions_without_translations' ]; then
+            version='${{ env.PR_NUM || github.ref_name }}/'
+          else
+            echo "::error::The 'multiple_versions_with_translations' versioning scheme is not supported. 
+              Please change versioning scheme in the RTD project settings."
+          fi
+          if [ -z '${{ env.PR_NUM }}' ]; then
+            canonical_url="${{ steps.get-info.outputs.base_url }}${version}"
+            else
+            canonical_url="https://${{ inputs.rtd_project }}--${{ env.PR_NUM }}.org.readthedocs.build/${version}"
+          fi
+          echo "Canonical URL: $canonical_url"
+          echo "canonical_url=$canonical_url" >> $GITHUB_OUTPUT
 
   # We check the build status and wait for the build to complete successfully. 
   # This is to avoid getting link-checker errors for pages that haven't been deployed yet.
@@ -172,6 +196,7 @@ jobs:
 
       - name: Build mkdocs site
         run: |
+          export READTHEDOCS_CANONICAL_URL='${{ needs.get-rtd-info.outputs.canonical_url }}'
           mkdocs build --config-file ${{ steps.get-mkdocs-config.outputs.mkdocs_yaml }} -d ${{ env.BUILD_FOLDER }}
         
       - name: Check links with lychee
