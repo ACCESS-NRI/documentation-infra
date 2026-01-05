@@ -74,18 +74,16 @@ jobs:
           sleep 30 # It's almost impossible that the build will be finished in less than 30 seconds
           while true; do
             status=$(check_latest_build | jq '.success')
-            if [ -z "$status" ]; then
-                echo "
-                  ::error::There was an error retrieving the build status from the ReadTheDocs endpoint: 
-                  ${RTD_endpoint} and commit ${{ inputs.commit }}.
-                  "
-                exit 1
-            elif [ "$status" == "null" ]; then
+            if [ "$status" == "null" ]; then
                 echo "Build still in progress..."
                 sleep 10
             elif [ "$status" == "true" ]; then
                 echo "Build succeeded."
                 break
+            elif [ -z "$status" ]; then
+                echo "::error::There was an error retrieving the build status from the \
+                ReadTheDocs endpoint: ${RTD_endpoint} and commit ${{ inputs.commit }}."
+                exit 1
             elif [ "$status" == "false" ]; then
                 build_url=$(check_latest_build | jq -r '.urls.build')
                 echo "::error::There was an error in the ReadTheDocs build. For further information, check the build logs: $build_url"
