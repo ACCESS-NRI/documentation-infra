@@ -6,32 +6,27 @@ name: Check links workflow
 on: 
   workflow_call:
     inputs:
-      repo:
+      repository:
         required: true
         type: string
-        description: "The GitHub repository in the form OWNER/REPO for which to check links."
+        description: "Full name of the GitHub repository in the form OWNER/REPO for which to check links."
+      commit:
+        required: true
+        type: string
+        description: "Commit (SHA) in the specified 'repository' to check links for."
       rtd_project:
         type: string
         required: true
         description: "The Read the Docs project name."
-      ref_name:
-        required: true
-        type: string
-        description: "The PR number or git branch/tag name for which to check links."
-      mkdocs_yaml:
-        type: string
-        required: false
-        default: 'mkdocs.yml'
-        description: "Path to the mkdocs.yml configuration file. If not provided, 'mkdocs.yml' is used."
       lychee_config:
         type: string
         required: false
         description: "Path to the lychee configuration file. If not provided, the default one from the ACCESS-NRI/documentation-infra repo will be used."
-      python_requirements_txt:
+      readthedocs_yaml:
         type: string
         required: false
-        default: 'requirements.txt'
-        description: "Path to the python requirements.txt file. If not provided, 'requirements.txt' is used."
+        default: '.readthedocs.yaml'
+        description: "Path to the ReadTheDocs configuration file. If not provided, '.readthedocs.yaml' is used."
     secrets:
       repo_read_token:
         required: false
@@ -45,8 +40,6 @@ env:
 jobs:
   get-rtd-info:
     runs-on: ubuntu-latest
-    outputs:
-      canonical_url: ${{ steps.set-canonical-url.outputs.canonical_url }}
     steps:
       - name: Get RTD base URL and versioning scheme
         id: get-info
@@ -61,29 +54,6 @@ jobs:
           versioning_scheme=$(jq -r '.versioning_scheme' <<< "$rtd_project")
           echo "Versioning scheme: $versioning_scheme"
           echo "versioning_scheme=${versioning_scheme}" >> $GITHUB_OUTPUT
-      
-      - name: Set READTHEDOCS_CANONICAL_URL
-        id: set-canonical-url
-        env:
-          VERSIONING_SCHEME: ${{ steps.get-info.outputs.versioning_scheme }}
-          PR_NUM: ${{ github.event.pull_request.number }}
-        run: |
-          if [ "$VERSIONING_SCHEME" == 'single_version_without_translations' ]; then
-            version=
-            elif [ "$VERSIONING_SCHEME" == 'multiple_versions_without_translations' ]; then
-            version='${{ env.PR_NUM || github.ref_name }}/'
-          else
-            echo "::error::The 'multiple_versions_with_translations' versioning scheme is not supported. 
-              Please change versioning scheme in the RTD project settings."
-          fi
-          if [ -z '${{ env.PR_NUM }}' ]; then
-            canonical_url="${{ steps.get-info.outputs.base_url }}${version}"
-            else
-            canonical_url="https://${{ inputs.rtd_project }}--${{ env.PR_NUM }}.org.readthedocs.build/${version}"
-          fi
-          echo "Canonical URL: $canonical_url"
-          echo "canonical_url=$canonical_url" >> $GITHUB_OUTPUT
-        
 
   # We check the build status and wait for the build to complete successfully. 
   # This is to avoid getting link-checker errors for pages that haven't been deployed yet.
@@ -93,22 +63,25 @@ jobs:
     steps:
       - name: Check build status
         run: |
+          RTD_endpoint='${{ env.RTD_API_URL }}projects/${{ inputs.rtd_project }}/builds/?limit=10'
           echo "Checking build status by running:"
-          echo "curl -s ${{ env.RTD_API_URL }}projects/${{ inputs.rtd_project }}/builds/?limit=20 | 
-            jq 'first(.results.[] | select(.version == \"${{ github.event.pull_request.number || github.ref_name }}\")) | .success'"
+          echo "curl -s $RTD_endpoint | jq '.results.[] | select(.commit == \"${{ inputs.commit }}\")'"
           # Function to get the latest build for the specific version
           check_latest_build() {
-            curl -s ${{ env.RTD_API_URL }}projects/${{ inputs.rtd_project }}/builds/?limit=20 | \
-              jq 'first(.results.[] | select(.version == "${{ github.event.pull_request.number || github.ref_name }}"))'
+            curl -s $RTD_endpoint | jq '.results.[] | select(.commit == "${{ inputs.commit }}")'
           }
           # Loop until the build finishes (success or failure)
+          sleep 30 # It's almost impossible that the build will be finished in less than 30 seconds
           while true; do
             status=$(check_latest_build | jq '.success')
             if [ -z "$status" ]; then
-                echo '::error::There was an error retrieving the build status from the ReadTheDocs API'
+                echo "
+                  ::error::There was an error retrieving the build status from the ReadTheDocs endpoint: 
+                  ${RTD_endpoint} and commit ${{ inputs.commit }}.
+                  "
                 exit 1
             elif [ "$status" == "null" ]; then
-                echo "Build still in progress, waiting 10 seconds..."
+                echo "Build still in progress..."
                 sleep 10
             elif [ "$status" == "true" ]; then
                 echo "Build succeeded."
@@ -130,9 +103,10 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v5
         with:
-          repository: ${{ inputs.repo }}
-          ref: ${{ inputs.ref_name }}
-          token: ${{ secrets.repo_pat || github.token }}
+          repository: ${{ inputs.repository }}
+          ref: ${{ inputs.commit }}
+          fetch-depth: 0
+          token: ${{ secrets.repo_read_token || github.token }}
 
       # If lychee_config is not provided, use the lychee_config.toml in the ACCESS-NRI/documentation-infra repo
       - name: Get lychee config
@@ -151,20 +125,56 @@ jobs:
             echo "========================================="
             echo "lychee_config_path=$lychee_config_path" >> $GITHUB_OUTPUT
           fi
+      
+      - name: Install yq
+        run: |
+          sudo wget -qO /usr/local/bin/yq \
+            https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+          sudo chmod +x /usr/local/bin/yq
+          yq --version
+
+      - name: Get Python version
+        id: get-python-version
+        run: |
+          version=$(yq '.build.tools.python' ${{ inputs.readthedocs_yaml }})
+          if [ -z "$version" ]; then
+            echo "::error::Python version not found in ReadTheDocs YAML."
+            exit 1
+          fi
+          echo "python_version=$version" >> $GITHUB_OUTPUT
 
       - name: Python setup
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
-          python-version: 3.11.x
+          python-version: '${{ steps.get-python-version.outputs.python_version }}'
           
-      - name: Install dependencies
+      - name: Get Python dependencies
+        id: get-python-dependencies
         run: |
-          pip install -r ${{ inputs.python_requirements_txt }}
+          requirements_txt=$(yq '.python.install.[].requirements' ${{ inputs.readthedocs_yaml }})
+          if [ -z "$requirements_txt" ]; then
+            echo "::error::Python requirements not found in ReadTheDocs YAML."
+            exit 1
+          fi
+          echo "python_requirements_txt=$requirements_txt" >> $GITHUB_OUTPUT
+
+      - name: Install Python dependencies
+        run: |
+          pip install -r '${{ steps.get-python-dependencies.outputs.python_requirements_txt }}'
       
+      - name: Get mkdocs config
+        id: get-mkdocs-config
+        run: |
+          mkdocs_yaml=$(yq '.mkdocs.configuration' ${{ inputs.readthedocs_yaml }})
+          if [ -z "$mkdocs_yaml" ]; then
+            echo "::error::MkDocs configuration not found in ReadTheDocs YAML."
+            exit 1
+          fi
+          echo "mkdocs_yaml=$mkdocs_yaml" >> $GITHUB_OUTPUT
+
       - name: Build mkdocs site
         run: |
-          export READTHEDOCS_CANONICAL_URL='${{ needs.get-rtd-info.outputs.canonical_url }}'
-          mkdocs build --config-file ${{ inputs.mkdocs_yaml }} -d ${{ env.BUILD_FOLDER }}
+          mkdocs build --config-file ${{ steps.get-mkdocs-config.outputs.mkdocs_yaml }} -d ${{ env.BUILD_FOLDER }}
         
       - name: Check links with lychee
         id: lychee
