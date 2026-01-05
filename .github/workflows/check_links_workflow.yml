@@ -38,7 +38,7 @@ on:
         description: "Token with read permissions. Needed for private repositories."
 
 env:
-  DEFAULT_LYCHEE_CONFIG: access-nri/documentation-infra/v0/.github/workflows/lychee_config.toml
+  DEFAULT_LYCHEE_CONFIG: access-nri/documentation-infra/main/.github/workflows/lychee_config.toml
   BUILD_FOLDER: ${{ github.workspace }}/docs_folder
   RTD_API_URL: https://readthedocs.org/api/v3/
 
