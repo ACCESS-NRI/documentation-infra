@@ -141,7 +141,7 @@ jobs:
             lychee_config_path="${{ github.workspace }}/lychee_config.toml"
             curl -sSL https://raw.githubusercontent.com/${{ env.DEFAULT_LYCHEE_CONFIG }} \
               -o "$lychee_config_path"
-            echo "Lychee config not provided. Using default lychee config from Hive Docs repo:"
+            echo "Lychee config not provided. Using default lychee config from ACCESS-NRI/documentation-infra repo:"
             echo "============= LYCHEE CONFIG ============="
             cat $lychee_config_path
             echo "========================================="
