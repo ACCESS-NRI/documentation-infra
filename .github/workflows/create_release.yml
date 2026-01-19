@@ -14,11 +14,16 @@ jobs:
       - uses: actions/checkout@v6
 
       - name: Check action version
+        env:
+          ACTION: rtd-build-status
+        shell: bash
         run: |
-          wrong_version=$(grep -R 'uses: .*/rtd-build-status@[^\b]*' .github/workflows --exclude=create_release.yml \
-            | grep -v 'uses: .*/rtd-build-status@${{ github.ref_name }}')
+          wrong_version=$(grep -R 'uses: .*/${{ env.ACTION }}@[^\b]*' .github/workflows --exclude=create_release.yml)
+          echo "$wrong_version"
+          grep 'uses: -v .*/${{ env.ACTION }}@${{ github.ref_name }}' <<< "$wrong_version"
+          echo "test"
           if [ -n "$wrong_version" ]; then
-            echo "::error::Found rtd-build-status action versions different from the release tag '${{ github.ref_name }}'."
+            echo "::error::Found ${{ env.ACTION }} action versions different from the release tag '${{ github.ref_name }}'."
             echo "${wrong_version}"
             exit 1
           fi
