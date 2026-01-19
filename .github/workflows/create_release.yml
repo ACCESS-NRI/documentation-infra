@@ -6,9 +6,27 @@ on:
       - 'v*'
 
 jobs:
+  # Check that the rtd-build-status action version is the same one as the release tag
+  check-action-version:
+    name: Check rtd-build-status action version
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Check action version
+        run: |
+          wrong_version=$(grep -R 'uses: .*/rtd-build-status@[^\b]*' .github/workflows --exclude=create_release.yml \
+            | grep -v 'uses: .*/rtd-build-status@${{ github.ref_name }}')
+          if [ -n "$wrong_version" ]; then
+            echo "::error::Found rtd-build-status action versions different from the release tag:"
+            echo "$wrong_version"
+            exit 1
+          fi
+
   create-github-release:
     name: Create GitHub Release
     runs-on: ubuntu-latest
+    needs: check-action-version
     permissions:
       contents: write
     steps:
@@ -22,7 +40,7 @@ jobs:
   cleanup-on-failure:
     name: Cleanup on failure
     runs-on: ubuntu-latest
-    needs: create-github-release
+    needs: [check-action-version, create-github-release]
     # Run this job if any of the previous jobs failed, or if the workflow was cancelled
     if: ${{ ( always() && failure() ) || cancelled() }}
     permissions:
