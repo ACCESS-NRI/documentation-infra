@@ -87,7 +87,7 @@ jobs:
     steps:
       - name: Check build status
         id: check-build-status
-        uses: access-nri/documentation-infra/.github/actions/rtd-build-status@main
+        uses: access-nri/documentation-infra/.github/actions/rtd-build-status@v0.3
         with:
           rtd-project: ${{ inputs.rtd_project }}
           commit: ${{ inputs.commit }}
