@@ -86,37 +86,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check build status
-        run: |
-          RTD_endpoint='${{ env.RTD_API_URL }}projects/${{ inputs.rtd_project }}/builds/?limit=10'
-          echo "Checking build status by running:"
-          echo "curl -s $RTD_endpoint | jq '.results.[] | select(.commit == \"${{ inputs.commit }}\")'"
-          # Function to get the latest build for the specific version
-          check_latest_build() {
-            curl -s $RTD_endpoint | jq '.results.[] | select(.commit == "${{ inputs.commit }}")'
-          }
-          # Loop until the build finishes (success or failure)
-          sleep 30 # It's almost impossible that the build will be finished in less than 30 seconds
-          while true; do
-            status=$(check_latest_build | jq '.success')
-            if [ "$status" == "null" ]; then
-                echo "Build still in progress..."
-                sleep 10
-            elif [ "$status" == "true" ]; then
-                echo "Build succeeded."
-                break
-            elif [ -z "$status" ]; then
-                echo "::error::There was an error retrieving the build status from the \
-                ReadTheDocs endpoint: ${RTD_endpoint} and commit ${{ inputs.commit }}."
-                exit 1
-            elif [ "$status" == "false" ]; then
-                build_url=$(check_latest_build | jq -r '.urls.build')
-                echo "::error::There was an error in the ReadTheDocs build. For further information, check the build logs: $build_url"
-                exit 1
-            else
-                echo "ERROR: Unexpected build status: $status"
-                exit 1
-            fi
-          done
+        id: check-build-status
+        uses: access-nri/documentation-infra/.github/actions/rtd-build-status@main
+        with:
+          rtd-project: ${{ inputs.rtd_project }}
+          commit: ${{ inputs.commit }}
 
   check-links:
     runs-on: ubuntu-latest
