@@ -18,8 +18,7 @@ jobs:
           wrong_version=$(grep -R 'uses: .*/rtd-build-status@[^\b]*' .github/workflows --exclude=create_release.yml \
             | grep -v 'uses: .*/rtd-build-status@${{ github.ref_name }}')
           if [ -n "$wrong_version" ]; then
-            echo "::error::Found rtd-build-status action versions different from the release tag:"
-            echo "$wrong_version"
+            echo "::error::Found rtd-build-status action versions different from the release tag '${{ github.ref_name }}':\n${wrong_version}"
             exit 1
           fi
 
