@@ -105,6 +105,7 @@ glob_ignore_case = false
     '^https://forum\.access-hive\.org\.au/t/model-release-checklist-template\b', # Private Forum Post
     '^https://mermaid\.live\b', # Mermaid live editor
     '^https://modelevaluation\.org\b', # Sometimes has Bad Gateway
+    '^https://github.com(?:/[^/]*)*?/edit/', # GitHub edit links (These fail with new documentation pages in canonical urls)
   ]
 
 # Exclude paths from getting checked. The values are treated as regular expressions
