@@ -36,10 +36,10 @@ runs:
       run: |
         endpoint=${{env.RTD_API_URL}}/projects/${{ inputs.rtd-project }}/builds/?limit=${{ inputs.num-latest-builds }}
         echo "Checking build status by running:"
-        echo "curl -s $endpoint | jq '.results.[] | select(.commit == \"${{ inputs.commit }}\")'"
+        echo "curl -s $endpoint | jq '.results[] | select(.commit == \"${{ inputs.commit }}\")'"
         # Function to get the latest build for the specific version
         check_latest_build() {
-          curl -s $endpoint | jq '.results.[] | select(.commit == "${{ inputs.commit }}")'
+          curl -s $endpoint | jq '.results[] | select(.commit == "${{ inputs.commit }}")'
         }
         # Check that builds exist
         if [ $(curl -s $endpoint | jq '.count') -eq 0 ]; then
