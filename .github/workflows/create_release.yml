@@ -12,6 +12,7 @@ jobs:
   set-version-tag:
     name: Set correct version for consistency across repo files
     runs-on: ubuntu-latest
+    environment: release
     steps:
       - uses: actions/checkout@v6
 
