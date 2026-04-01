@@ -15,10 +15,10 @@ jobs:
     environment: release
     permissions:
       contents: write
-    env:
-      GITHUB_TOKEN: ${{ secrets.REPO_CONTENT_WRITE_TOKEN }}
     steps:
       - uses: actions/checkout@v6
+        with:
+          token: ${{ secrets.REPO_CONTENT_WRITE_TOKEN }}
 
       - name: Check version
         uses: access-nri/actions/.github/actions/version-check@main
@@ -52,11 +52,23 @@ jobs:
                 echo "  AFTER:  $(grep -n "${{ inputs.version }}" "$file")"
               fi
             done
+      
+      # Required to sign commits
+      - name: Import GPG settings
+        uses: crazy-max/ghaction-import-gpg@01dd5d3ca463c7f10f7f4f7b4f177225ac661ee4  # v6.1.0
+        with:
+          gpg_private_key: ${{ secrets.GH_ACTIONS_BOT_GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.GH_ACTIONS_BOT_GPG_PASSPHRASE }}
+          git_config_global: true
+          git_committer_name: "github-actions[bot]"
+          git_committer_email: "113399144+access-bot@users.noreply.github.com"
+          git_user_signingkey: true
+          git_commit_gpgsign: true
+          git_tag_gpgsign: true
 
       - name: Commit changes and create tag
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config --list
           if ! git diff --quiet; then
             git add -u
             git commit -m "Automatically updated version references to '${{ inputs.version }}'" \
