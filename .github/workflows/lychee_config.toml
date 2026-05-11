@@ -106,7 +106,10 @@ glob_ignore_case = false
     '^https://mermaid\.live\b', # Mermaid live editor
     '^https://modelevaluation\.org\b', # Sometimes has Bad Gateway
     '^https://github\.com(/[^/]*)*?/edit/', # GitHub edit links (These fail with new documentation pages in canonical urls)
-    '^https://docs.google.com/spreadsheets/[^#]*#.*', # Google spreadsheets with hashes (They fail because the hash is considered a fragment when it's not)
+    '^https://docs\.google.com/spreadsheets/[^#]*#.*', # Google spreadsheets with hashes (They fail because the hash is considered a fragment when it's not)
+    '^https://doi\.org\b', # DOI link for articles often causing "Rejected status code" errors
+    '^https://gmd\.copernicus\.org\b', # GMD articles often causing "Rejected status code" errors
+    '^https://journals\.ametsoc\.org\b', # Articles often causing "Rejected status code" errors
   ]
 
 # Exclude paths from getting checked. The values are treated as regular expressions
