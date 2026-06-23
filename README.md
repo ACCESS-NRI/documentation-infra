@@ -4,7 +4,7 @@ This repo contains the reusable infrastructure for the documentation websites cu
 ## Templates
 The [templates](https://github.com/ACCESS-NRI/documentation-infra/blob/main/templates) folder contains templates used for documentation websites, to be copied into their repositories following the instructions at the beginning of each template file.
 
-They are organized into directories that mirror their intended location in the target repository, so the `templates` directory can be treated as the target repository root.
+They are organised into directories that mirror their intended location in the target repository, so the `templates` directory can be treated as the target repository root.
 For example, `templates/.readthedocs.yaml` should be copied to `.readthedocs.yaml` in the target repository, while `templates/.github/workflows/check_links.yml` should be copied to `.github/workflows/check_links.yml`.
 
 ## ReadTheDocs Project Management
@@ -23,7 +23,7 @@ This ensures continuity of access and avoids single points of failure when team 
 ### Personal RTD Accounts
 
 RTD projects must be maintained through **individual personal RTD accounts**, not the `access-nri` one.
-This ensures each maintainer has access only to the projects they are responsible for and improves safety.
+This ensures each maintainer has access only to the projects they are responsible, thus improving security.
 
 Each maintainer must connect their personal RTD account to their GitHub account so that repository integrations work as expected.
 This connection must be made via the **GitHub App** integration (the legacy GitHub OAuth method is no longer supported and should not be used).
