@@ -23,7 +23,7 @@ This ensures continuity of access and avoids single points of failure when team 
 ### Personal RTD Accounts
 
 RTD projects must be maintained through **individual personal RTD accounts**, not the `access-nri` one.
-This ensures each maintainer has access only to the projects they are responsible, thus improving security.
+This ensures each maintainer has access only to the projects they are responsible for, thus improving security.
 
 Each maintainer must connect their personal RTD account to their GitHub account so that repository integrations work as expected.
 This connection must be made via the **GitHub App** integration (the legacy GitHub OAuth method is no longer supported and should not be used).
