@@ -38,5 +38,5 @@ To set up a new RTD project for an ACCESS-NRI repository:
    - The RTD usernames (or emails) for the intended maintainers
    - The custom URL for the website (if required)
 2. The documentation team will create the RTD project with the proper settings and GitHub integration configured.
-3. Once the project is created, the documentation team will grant **Maintainer** permissions to the nominated individuals.
+3. Once the project is created, the documentation team will grant **Maintainer** permissions to the nominated individuals and `access-nri`.
 4. Each maintainer should verify their access by logging into their personal RTD account and confirming the project appears in their dashboard.
