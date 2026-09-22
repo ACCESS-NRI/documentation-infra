@@ -1,34 +1,29 @@
 # Documentation infrastructure
-This repo contains the reusable infrastructure for the documentation websites curated and deployed by ACCESS-NRI.
+This repo contains the reusable infrastructure and templates for the documentation websites curated and deployed by ACCESS-NRI.
 
-## Templates
-The [templates](https://github.com/ACCESS-NRI/documentation-infra/blob/main/templates) folder contains templates used for documentation websites, to be copied into their repositories following the instructions at the beginning of each template file.
+The instructions below will help you set up a documentation repository and webite built using [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/reference/) and hosted through [ReadTheDocs](https://docs.readthedocs.com/platform/stable/) (RTD).
 
-They are organised into directories that mirror their intended location in the target repository, so the `templates` directory can be treated as the target repository root.
-For example, `templates/.readthedocs.yaml` should be copied to `.readthedocs.yaml` in the target repository, while `templates/.github/workflows/check_links.yml` should be copied to `.github/workflows/check_links.yml`.
+## Set up a documentation repository
+The [templates](https://github.com/ACCESS-NRI/documentation-infra/blob/main/templates) folder contains files needed to set up a documentation repository for ACCESS-NRI. 
+They are organised into directories that mirror their intended location in the target repository.
 
-## ReadTheDocs Project Management
+To set up a documentation repository:
 
-This section outlines how Read the Docs (RTD) projects are managed across ACCESS-NRI.
+1. Clone this repository<br>
+    ```
+    git clone git@github.com:ACCESS-NRI/documentation-infra.git
+    ```
 
-### Maintainer Requirements
+2. Copy the `templates` filetree into your documentation repository root<br>
+    ```
+    cp -r templates/. <your-repository-path>
+    ```
+    This will copy all files/folders within `templates` (including dot files and folders) into your documentation repository, with the correct structure.
 
-Every RTD project must have **at least two individual maintainers** in addition to the `access-nri` organisation account.
-This ensures continuity of access and avoids single points of failure when team members change roles or leave.
+3. Modify the files<br>
+    The copied files have commented lines starting with `# MODIFY`. This indicates that those lines might need to be edited based on the specifics of your documentation repository/website.
 
-- Maintainers must be listed explicitly on the RTD project's **Maintainers** settings page.
-- The `access-nri` account must always be included as a maintainer alongside the individual maintainers.
-- It is the maintainers' responsibility to keep the maintainers list up to date whenever team membership changes.
-
-### Personal RTD Accounts
-
-RTD projects must be maintained through **individual personal RTD accounts**, not the `access-nri` one.
-This ensures each maintainer has access only to the projects they are responsible for, thus improving security.
-
-Each maintainer should connect their personal RTD account to their GitHub account so that repository integrations run smoothly.
-This connection must be made via the **GitHub App** integration (the legacy GitHub OAuth method is no longer supported and should not be used).
-
-### Setting Up a New RTD Project
+## Set up a ReadTheDocs Project
 
 To set up a new RTD project for an ACCESS-NRI repository:
 
@@ -38,8 +33,23 @@ To set up a new RTD project for an ACCESS-NRI repository:
    - The RTD usernames (or emails) for the intended maintainers
    - The custom URL for the website (if required)
 2. The documentation team will create the RTD project with the proper settings and GitHub integration configured.
-3. Once the project is created, the documentation team will grant **Maintainer** permissions to the nominated individuals and `access-nri`.
+3. Once the project is created, the documentation team will grant **Maintainer** permissions to the nominated individuals along with `access-nri`.
 4. Each maintainer should verify their access by logging into their personal RTD account and confirming the project appears in their dashboard.
 
-### Need help?
+### RTD Projects Management
+
+- Every RTD project must have **at least two individual maintainers** in addition to the `access-nri` organisation account.
+This ensures continuity of access and avoids single points of failure when team members change roles or leave.
+
+- RTD projects must be maintained through **individual personal RTD accounts**, not the `access-nri` one.
+This ensures each maintainer has access only to the projects they are responsible for. 
+
+- Each maintainer should [log in](https://app.readthedocs.org/accounts/login/) to their personal RTD account using GitHub via the **GitHub App** integration (the legacy GitHub OAuth method is no longer supported and should not be used).
+
+- The `access-nri` account must always be included as a maintainer alongside the individual maintainers.
+
+- It is the maintainers' responsibility to keep the maintainers list up to date whenever team membership changes.
+
+
+## Need help?
 Feel free to ask any questions in the hive-docs-team Zulip channel. For bigger or more complex questions/suggestions, open a new issue in this repository.
