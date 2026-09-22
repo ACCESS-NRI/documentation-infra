@@ -3,6 +3,7 @@ This file is used to set up a glossary of abbreviations.
 For more information, refer to https://squidfunk.github.io/mkdocs-material/reference/tooltips/?h=glossary#adding-abbreviations
 
 Add, delete or edit the list below to add known abbreviations to the site.
+# MODIFY
 -->
 
 *[UKMO]: UK Met Office

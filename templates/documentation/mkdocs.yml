@@ -42,7 +42,7 @@ theme:
     - navigation.instant.prefetch # Prefetch pages for instant navigation
     - navigation.instant.progress # Show a progress bar for instant navigation on slow pages
     - navigation.tracking # The URL in the address bar is automatically updated with active anchor
-    - navigation.tabs # Top-level sections are rendered below the top header
+    # - navigation.tabs # Top-level sections are rendered below the top header
     - navigation.tabs.sticky # Top-level sections remain visible when scrolling
     - navigation.indexes # Files can be attached to main sections, which can function as overview pages (https://squidfunk.github.io/mkdocs-material/setup/setting-up-navigation/?h=navigation#section-index-pages)
     - navigation.top # Add a back-to-top button

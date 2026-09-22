@@ -13,27 +13,6 @@
   }
 }
 
-@media screen and (width < 800px) {
-  /* Make gap scale with viewport width */
-  .homepage-buttons {
-    gap: 5vw;
-  }
-  /* Hide upper text in homepage buttons */
-  .homepage-buttons > .vertical-card > :first-child {
-    display: none;
-  }
-  /* Lower text in homepage buttons */
-  .homepage-buttons > .vertical-card > :last-child {
-    font-size: calc(2.9vw + 0.15rem);
-  }
-  /* Homepage buttons Cards */
-  .homepage-buttons > .vertical-card {
-    background-color: var(--md-primary-fg-color--dark);
-    height: 8vw;
-    border-radius: 2vw;
-  }
-}
-
 @media screen and (width > 650px) {
   .small-card {
     max-height: 5rem;
@@ -46,14 +25,6 @@
   }
   
   /* Change the horizontal card to be rendered as a vertical one with aspect-ratio 1 */
-  /* .horizontal-card {
-    align-items: center;
-    flex-direction: column;
-    height: auto;
-    aspect-ratio: 1;
-    width: 40%;
-    container-type: inline-size;
-  } */
   .horizontal-card {
     flex-direction: column;
     justify-content: center;
@@ -80,11 +51,9 @@
   .horizontal-card > .card-image-container {
     flex-basis: 70%;
   }
-  /* Wrap homepage navigation cards */
-  .homepage-navigation {
-    flex-wrap: wrap;
-  }
 
+
+  /* Banner buttons */
   /* Make squared btn */
   .header-btn {
     flex-basis: 0;
@@ -101,16 +70,6 @@
   .header-btn >:last-child {
     display: none;
   }
-  
-  /* Homepage introduction paragraph */
-  /* Upper text */
-  .introduction > :first-child > :first-child {
-    font-size: calc(4.9vw + 0.15rem);
-  }
-  /* Lower text */
-  .introduction > :first-child > :last-child {
-    font-size: calc(2.9vw + 0.15rem);
-   }
   
   /* Footer */
   :is(.funding,.partners) > *:first-child {

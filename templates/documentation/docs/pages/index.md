@@ -1,3 +1,4 @@
+<!-- # MODIFY -->
 # Example Documentation
 
 This is an example of the documentation.
