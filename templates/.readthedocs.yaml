@@ -18,16 +18,16 @@ build:
     python: "3.13"
   jobs:
     # Set pip settings for safety on newly-published dependencies
-    post_create_environment:
+    pre_create_environment:
       - mkdir -p "$HOME/.config/pip"
       - printf "[global]\nuploaded-prior-to = P7D\n" > "$HOME/.config/pip/pip.conf"
 
 # Build documentation with Mkdocs
 mkdocs:
-  configuration: documentation/mkdocs.yml # MODIFY: path to mkdocs.yml
+  configuration: documentation/mkdocs.yml
 
 # Python requirements to build your documentation
 # See https://docs.readthedocs.io/en/stable/guides/reproducible-builds.html
 python:
   install:
-    - requirements: documentation/requirements.txt # MODIFY: path to requirements.txt
+    - requirements: documentation/requirements.txt
