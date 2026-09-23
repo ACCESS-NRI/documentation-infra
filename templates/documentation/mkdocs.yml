@@ -9,6 +9,19 @@
 # - MkDocs configuration guide: https://www.mkdocs.org/user-guide/configuration/
 # ============================================== #
 
+site_name: ... # MODIFY: Set the site name for your documentation
+
+# Site URL
+site_url: !ENV [READTHEDOCS_CANONICAL_URL, ""]
+# READTHEDOCS_CANONICAL_URL is set within the ReadTheDocs build
+
+# Git repository (Adds a link to the GitHub repository at the top)
+repo_url: https://github.com/ACCESS-NRI/... # MODIFY: Set the GitHub repository URL for your documentation
+repo_name: ... # MODIFY: Set the GitHub repository name for your documentation
+
+edit_uri: edit/main/documentation/docs/pages # MODIFY: If your documentation is in a different branch than `main` or folder (documentation/docs/pages), update this path accordingly
+
+
 # Navigation 
 # MODIFY: Set the navigation structure as needed for your site
 nav:
@@ -22,18 +35,8 @@ nav:
     - pages/example-section2/index.md
   # ...
 
-site_name: ... # MODIFY: Set the site name for your documentation
 
-# Site URL
-site_url: !ENV [READTHEDOCS_CANONICAL_URL, ""]
-# READTHEDOCS_CANONICAL_URL is set within the ReadTheDocs build
-
-# Git repository (Adds a link to the GitHub repository at the top)
-repo_url: https://github.com/ACCESS-NRI/... # MODIFY: Set the GitHub repository URL for your documentation
-repo_name: ... # MODIFY: Set the GitHub repository name for your documentation
-
-edit_uri: edit/main/documentation/docs/pages # MODIFY: If your documentation is in a different branch than `main` or folder (documentation/docs/pages), update this path accordingly
-
+# Theme configuration
 theme:
   name: material
   custom_dir: overrides
