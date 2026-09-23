@@ -127,6 +127,15 @@ plugins:
   # - optimize: # Optimizes all media files (https://squidfunk.github.io/mkdocs-material/plugins/optimize/#built-in-optimize-plugin)
   #     optimize_png_speed: 10
   # - privacy # Download any external asset locally to improve privacy (https://squidfunk.github.io/mkdocs-material/plugins/privacy/)
+  - mkdocs-jupyter: # Use Jupyter Notebooks in mkdocs (https://github.com/danielfrg/mkdocs-jupyter#mkdocs-jupyter-use-jupyter-notebooks-in-mkdocs)
+      include_source: true
+  - mkdocstrings: # Automatic documentation from docstrings (https://mkdocstrings.github.io/)
+      default_handler: python
+      handlers:
+        python:
+          paths: [../src]
+          options:
+            show_source: false
   - git-revision-date-localized: # Adds creation and last update dates at the end of each page
       type: date
       enable_creation_date: true
