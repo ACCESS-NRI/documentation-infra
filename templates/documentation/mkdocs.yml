@@ -177,10 +177,11 @@ extra_javascript:
 # Automatically reload page when running `mkdocs serve`, for any
 # of the following files outside of the 'docs' directory
 watch:
-  - mkdocs.yml
-  - overrides/
   - abbreviations.md
   - hooks/
+  - mkdocs.yml
+  - overrides/
+  - references.bib
 
 
 
