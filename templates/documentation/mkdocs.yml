@@ -139,6 +139,7 @@ plugins:
           paths: [../src]
           options:
             show_source: false
+            show_root_heading: true
   - git-revision-date-localized: # Adds creation and last update dates at the end of each page
       type: date
       enable_creation_date: true
