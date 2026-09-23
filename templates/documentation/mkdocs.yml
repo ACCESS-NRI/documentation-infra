@@ -32,7 +32,7 @@ site_url: !ENV [READTHEDOCS_CANONICAL_URL, ""]
 repo_url: https://github.com/ACCESS-NRI/... # MODIFY: Set the GitHub repository URL for your documentation
 repo_name: ... # MODIFY: Set the GitHub repository name for your documentation
 
-edit_uri: edit/main/documentation/docs/ # MODIFY: If your documentation is in a different branch than `main` or folder (documentation/docs), update this path accordingly
+edit_uri: edit/main/documentation/docs/pages # MODIFY: If your documentation is in a different branch than `main` or folder (documentation/docs/pages), update this path accordingly
 
 theme:
   name: material
