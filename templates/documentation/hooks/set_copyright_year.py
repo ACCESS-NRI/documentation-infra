@@ -1,4 +1,5 @@
-## This hook updates the copyright year in the site configuration to the current year.
+# This hook sets the year in the 'copyright' field of
+# MkDocs site configuration to the current year.
 from datetime import datetime
 
 def on_config(config, **kwargs):
