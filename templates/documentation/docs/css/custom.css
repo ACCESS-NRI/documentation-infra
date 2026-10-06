@@ -780,7 +780,9 @@ details.code {
 
 :is(.funding,.partners) > *:last-child a > img {
   margin: auto;
-  max-height: 4rem;
+  height: 2.5rem;
+  width: auto;
+  object-fit: contain;
 }
 .md-footer-meta__inner > * {
   display: flex;
