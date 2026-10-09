@@ -18,6 +18,8 @@ To set up a documentation repository:
     ```
     cp -r templates/. <your-repository-path>
     ```
+    **Note:** Make sure to include the dot in `templates/.`
+
     This will copy all files/folders within `templates` (including dot files and folders) into your documentation repository, with the correct structure.
 
 3. Modify the files<br>
