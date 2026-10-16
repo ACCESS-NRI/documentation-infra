@@ -157,10 +157,10 @@ plugins:
   - include-markdown # Enables including external markdown files in a document (https://github.com/mondeja/mkdocs-include-markdown-plugin#mkdocs-include-markdown-plugin)
 
 hooks:
-  - hooks/set_copyright_year.py # Automatically sets the copyright year to the current year
   - hooks/hide_pages_url_segment.py # Automatically hides the "/pages" URL segment for pages inside the "pages" directory
 
-copyright: Copyright &copy; {year} ACCESS-NRI
+copyright: Copyright &copy; <CURRENT_YEAR> ACCESS-NRI # MODIFY: Replace <CURRENT_YEAR> with the current year.
+# Note: there is no need to update the copyright year (https://stackoverflow.com/questions/2390230/do-copyright-dates-need-to-be-updated/2391555#2391555)
 
 # Footer
 extra:
